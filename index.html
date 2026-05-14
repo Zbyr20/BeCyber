@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeCyber — Siber Güvenlik Öğrenme Platformu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="landing">
+
+    <!-- Hero — sola yaslı, bilerek simetrik değil -->
+    <header class="hero">
+      <div class="hero-badge">
+        <span></span>
+        siber güvenlik · kişisel çalışma defteri
+      </div>
+      <h1>Sıfırdan <span class="gradient-text">uzmanlığa</span>, kendi notlarınla.</h1>
+      <p>
+        Cisco sertifika hiyerarşisini takip eden bir iskelet. İçini sen
+        dolduruyorsun — her alt konu düzenleyebileceğin bir wiki sayfası.
+      </p>
+      <div class="cisco-badge">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+        Foundational → Associate → Professional → Expert
+      </div>
+    </header>
+
+    <!-- Stats — deftere not düşülmüş gibi -->
+    <div class="stats-bar">
+      <div class="stat"><div class="num">4</div><div class="label">sertifika seviyesi</div></div>
+      <div class="stat"><div class="num" id="stat-domains">—</div><div class="label">domain</div></div>
+      <div class="stat"><div class="num" id="stat-subs">—</div><div class="label">alt konu / sayfa</div></div>
+      <div class="stat"><div class="num">∞</div><div class="label">düzenlenebilir</div></div>
+    </div>
+
+    <!-- Sertifika kartları -->
+    <main class="certs-section">
+      <div class="section-label">bir yol seç ve başla</div>
+      <div class="certs-grid" id="cert-grid"></div>
+    </main>
+
+    <!-- Kaynaklar — teori & lab -->
+    <section class="extra-section">
+      <div class="section-label">öğrenmek için iyi başlangıçlar</div>
+      <div class="resources-grid">
+
+        <div class="resource-col">
+          <div class="resource-col-head">
+            <span class="resource-col-icon">📖</span>
+            <div>
+              <h3>Teori</h3>
+              <p>okuma, izleme, kavramlar</p>
+            </div>
+          </div>
+          <ul class="resource-list">
+            <li><a class="resource-link" href="https://www.netacad.com" target="_blank" rel="noopener">
+              <span class="r-name">Cisco Networking Academy</span>
+              <span class="r-note">ücretsiz sertifika yolları ve laboratuvarlı kurslar</span>
+            </a></li>
+            <li><a class="resource-link" href="https://www.professormesser.com" target="_blank" rel="noopener">
+              <span class="r-name">Professor Messer</span>
+              <span class="r-note">ücretsiz Security+ / Network+ video dersleri</span>
+            </a></li>
+            <li><a class="resource-link" href="https://attack.mitre.org" target="_blank" rel="noopener">
+              <span class="r-name">MITRE ATT&amp;CK</span>
+              <span class="r-note">saldırı taktik ve tekniklerinin bilgi tabanı</span>
+            </a></li>
+            <li><a class="resource-link" href="https://owasp.org" target="_blank" rel="noopener">
+              <span class="r-name">OWASP</span>
+              <span class="r-note">web uygulama güvenliği, Top 10 ve rehberler</span>
+            </a></li>
+            <li><a class="resource-link" href="https://csrc.nist.gov" target="_blank" rel="noopener">
+              <span class="r-name">NIST CSRC</span>
+              <span class="r-note">resmi standartlar — SP 800-61, 800-53, çerçeveler</span>
+            </a></li>
+            <li><a class="resource-link" href="https://www.cybrary.it" target="_blank" rel="noopener">
+              <span class="r-name">Cybrary</span>
+              <span class="r-note">kariyer odaklı ücretsiz kurslar</span>
+            </a></li>
+            <li><a class="resource-link" href="https://www.sans.org/white-papers/" target="_blank" rel="noopener">
+              <span class="r-name">SANS Reading Room</span>
+              <span class="r-note">derinlemesine whitepaper arşivi</span>
+            </a></li>
+          </ul>
+        </div>
+
+        <div class="resource-col">
+          <div class="resource-col-head">
+            <span class="resource-col-icon">🧪</span>
+            <div>
+              <h3>Lab</h3>
+              <p>elle pratik, simülasyon, CTF</p>
+            </div>
+          </div>
+          <ul class="resource-list">
+            <li><a class="resource-link" href="https://tryhackme.com" target="_blank" rel="noopener">
+              <span class="r-name">TryHackMe</span>
+              <span class="r-note">rehberli, başlangıç dostu pratik odaları</span>
+            </a></li>
+            <li><a class="resource-link" href="https://www.hackthebox.com" target="_blank" rel="noopener">
+              <span class="r-name">Hack The Box</span>
+              <span class="r-note">gerçekçi sızma testi makineleri</span>
+            </a></li>
+            <li><a class="resource-link" href="https://letsdefend.io" target="_blank" rel="noopener">
+              <span class="r-name">LetsDefend</span>
+              <span class="r-note">tarayıcıda SOC analist simülasyonu</span>
+            </a></li>
+            <li><a class="resource-link" href="https://cyberdefenders.org" target="_blank" rel="noopener">
+              <span class="r-name">CyberDefenders</span>
+              <span class="r-note">blue team ve DFIR challenge'ları</span>
+            </a></li>
+            <li><a class="resource-link" href="https://www.netacad.com/courses/packet-tracer" target="_blank" rel="noopener">
+              <span class="r-name">Cisco Packet Tracer</span>
+              <span class="r-note">ağ topolojisi ve cihaz simülatörü</span>
+            </a></li>
+            <li><a class="resource-link" href="https://overthewire.org/wargames/" target="_blank" rel="noopener">
+              <span class="r-name">OverTheWire</span>
+              <span class="r-note">Linux ve güvenlik wargame'leri</span>
+            </a></li>
+            <li><a class="resource-link" href="https://picoctf.org" target="_blank" rel="noopener">
+              <span class="r-name">picoCTF</span>
+              <span class="r-note">başlangıç seviyesi CTF platformu</span>
+            </a></li>
+            <li><a class="resource-link" href="https://www.splunk.com/en_us/download/splunk-enterprise.html" target="_blank" rel="noopener">
+              <span class="r-name">Splunk Free</span>
+              <span class="r-note">ücretsiz sürümle SIEM ve log analizi pratiği</span>
+            </a></li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Çalışma unvanları & araçları -->
+    <section class="extra-section">
+      <div class="section-label">cybersecurity'de kimler çalışır, neyle çalışır</div>
+      <div class="roles-grid" id="roles-grid"></div>
+    </section>
+
+    <p class="hand-footer">
+      acele yok — bir konu, bir sayfa, bir gün. <b>not almak öğrenmenin yarısı.</b>
+    </p>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script>
+    const grid = document.getElementById('cert-grid');
+
+    function countSubtopics(cert) {
+      let count = 0;
+      cert.domains.forEach(d => d.topics.forEach(t => count += t.subtopics.length));
+      return count;
+    }
+
+    function getProgress(certId) {
+      try { return JSON.parse(localStorage.getItem(`progress_${certId}`) || '{}'); }
+      catch { return {}; }
+    }
+
+    let totalDomains = 0, totalSubs = 0;
+
+    CERTIFICATIONS.forEach(cert => {
+      totalDomains += cert.domains.length;
+      const total = countSubtopics(cert);
+      totalSubs += total;
+
+      const card = document.createElement('a');
+      card.href = `learn.html?cert=${cert.id}`;
+      card.className = 'cert-card';
+
+      const progress = getProgress(cert.id);
+      const done = Object.keys(progress).length;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+      card.innerHTML = `
+        <div class="cert-level-badge" style="color:${cert.color}">${cert.badge}</div>
+        <span class="cert-icon">${cert.icon}</span>
+        <div class="cert-title">${cert.title}</div>
+        <div class="cert-subtitle">${cert.subtitle}</div>
+        <div class="cert-code">${cert.code}</div>
+        <div class="cert-desc">${cert.description}</div>
+        ${pct > 0 ? `
+          <div style="margin-bottom:18px">
+            <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-3);margin-bottom:2px">
+              ${done}/${total} alt konu — %${pct}
+            </div>
+            <div class="progress-bar-wrap" style="height:6px;margin-top:6px">
+              <div class="progress-bar-fill" style="width:${pct}%"></div>
+            </div>
+          </div>
+        ` : ''}
+        <div class="cert-arrow">
+          başla
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    document.getElementById('stat-domains').textContent = totalDomains;
+    document.getElementById('stat-subs').textContent = totalSubs;
+
+    // ─── Çalışma unvanları ───────────────────────────────
+    const ROLES = [
+      { icon: "🛡️", title: "SOC Analyst", desc: "SIEM üzerinden alarm izleme, triyaj ve ilk müdahale.", tools: ["Splunk", "Microsoft Sentinel", "QRadar", "Wireshark", "ELK"] },
+      { icon: "🚨", title: "Incident Responder (DFIR)", desc: "Olayları kontrol altına alma, kök neden analizi.", tools: ["Velociraptor", "KAPE", "Volatility", "Autopsy", "TheHive"] },
+      { icon: "🔎", title: "Threat Hunter", desc: "Henüz alarm üretmemiş tehditleri proaktif arama.", tools: ["MITRE ATT&CK", "CrowdStrike", "SentinelOne", "Sigma", "Jupyter"] },
+      { icon: "💥", title: "Penetration Tester", desc: "Sistemlere yetkili saldırarak zafiyet bulma.", tools: ["Kali Linux", "Burp Suite", "Metasploit", "Nmap", "BloodHound"] },
+      { icon: "🎯", title: "Red Team Operator", desc: "Gerçek saldırgan simülasyonu, tespit yeteneği testi.", tools: ["Cobalt Strike", "Sliver", "Mythic", "Covenant"] },
+      { icon: "🧬", title: "Malware Analyst", desc: "Zararlı yazılımı tersine mühendislikle çözme.", tools: ["Ghidra", "IDA Pro", "x64dbg", "REMnux", "ANY.RUN"] },
+      { icon: "🌐", title: "Network Security Engineer", desc: "Ağ savunma cihazlarının kurulum ve yönetimi.", tools: ["Cisco ASA/FTD", "pfSense", "Wireshark", "Suricata"] },
+      { icon: "☁️", title: "Cloud Security Engineer", desc: "Bulut ortamlarının yapılandırma güvenliği.", tools: ["AWS Security Hub", "MS Defender", "Prowler", "ScoutSuite", "Wiz"] },
+      { icon: "🧱", title: "Security Engineer", desc: "Güvenlik araçlarının kurulması ve otomasyonu.", tools: ["Terraform", "Ansible", "SIEM", "EDR", "Python"] },
+      { icon: "🏛️", title: "Security Architect", desc: "Uçtan uca güvenli sistem tasarımı.", tools: ["Zero Trust", "SABSA", "Threat Modeling", "NIST CSF"] },
+      { icon: "📋", title: "GRC / Compliance Analyst", desc: "Yönetişim, risk ve uyumluluk yönetimi.", tools: ["ISO 27001", "NIST CSF", "OneTrust", "ServiceNow GRC"] },
+      { icon: "🐞", title: "Application Security Engineer", desc: "Yazılım geliştirme döngüsüne güvenlik katma.", tools: ["Burp Suite", "OWASP ZAP", "Semgrep", "SonarQube", "Snyk"] },
+      { icon: "🛰️", title: "Threat Intelligence Analyst", desc: "Tehdit aktörlerini ve IOC'leri izleme.", tools: ["MISP", "OpenCTI", "VirusTotal", "Shodan", "Maltego"] },
+      { icon: "🔬", title: "Digital Forensics Examiner", desc: "Dijital delil toplama ve adli analiz.", tools: ["Autopsy", "FTK", "EnCase", "Magnet AXIOM", "Volatility"] }
+    ];
+
+    const rolesGrid = document.getElementById('roles-grid');
+    ROLES.forEach(role => {
+      const card = document.createElement('div');
+      card.className = 'role-card';
+      card.innerHTML = `
+        <div class="role-head">
+          <span class="role-icon">${role.icon}</span>
+          <h4>${role.title}</h4>
+        </div>
+        <p class="role-desc">${role.desc}</p>
+        <div class="role-tools">
+          ${role.tools.map(t => `<span class="tool-tag">${t}</span>`).join('')}
+        </div>
+      `;
+      rolesGrid.appendChild(card);
+    });
+  </script>
+</body>
+</html>

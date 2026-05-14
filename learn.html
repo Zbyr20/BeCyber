@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeCyber — Öğren</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Üst nav -->
+<nav class="nav-bar">
+  <a href="index.html" class="nav-logo">BeCyber</a>
+  <div class="breadcrumb" id="top-breadcrumb">
+    <a href="index.html">Ana Sayfa</a>
+  </div>
+  <div id="nav-progress"></div>
+</nav>
+
+<div class="learn-layout">
+  <!-- Kenar çubuğu -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3 id="sidebar-title">müfredat</h3>
+      <div class="sidebar-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="alt konu ara...">
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav"></nav>
+  </aside>
+
+  <!-- İçerik -->
+  <main class="content-area" id="content-area">
+    <div class="content-topbar">
+      <div class="breadcrumb" id="content-breadcrumb"></div>
+      <div id="content-actions"></div>
+    </div>
+    <div class="content-main" id="content-main">
+      <div class="empty-state">
+        <div class="big-icon">📒</div>
+        <h3>Bir konu seç</h3>
+        <p>sol menüden bir alt başlığa tıkla</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="js/data.js"></script>
+<script>
+// ─── DURUM ────────────────────────────────────────────────
+const params = new URLSearchParams(location.search);
+const certId = params.get('cert');
+
+const cert = CERTIFICATIONS.find(c => c.id === certId);
+if (!cert) { location.href = 'index.html'; }
+
+let progress = loadProgress();
+
+// ─── YARDIMCILAR ──────────────────────────────────────────
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(`progress_${certId}`) || '{}'); }
+  catch { return {}; }
+}
+function saveProgress() {
+  localStorage.setItem(`progress_${certId}`, JSON.stringify(progress));
+}
+function loadWiki(id) {
+  return localStorage.getItem(`wiki_${certId}_${id}`) || '';
+}
+function saveWiki(id, content) {
+  localStorage.setItem(`wiki_${certId}_${id}`, content);
+}
+function getLastSaved(id) {
+  const ts = localStorage.getItem(`wiki_ts_${certId}_${id}`);
+  return ts ? new Date(parseInt(ts)).toLocaleString('tr-TR') : null;
+}
+function saveWikiWithTimestamp(id, content) {
+  saveWiki(id, content);
+  localStorage.setItem(`wiki_ts_${certId}_${id}`, Date.now());
+}
+
+function totalSubtopics() {
+  let n = 0;
+  cert.domains.forEach(d => d.topics.forEach(t => n += t.subtopics.length));
+  return n;
+}
+function doneCount() { return Object.keys(progress).length; }
+function countSubs(domain) {
+  return domain.topics.reduce((a, t) => a + t.subtopics.length, 0);
+}
+function doneSubs(domain) {
+  return domain.topics.reduce((a, t) => a + t.subtopics.filter(s => progress[s.id]).length, 0);
+}
+
+function findDomain(id) { return cert.domains.find(d => d.id === id); }
+function findTopic(domainId, topicId) {
+  return findDomain(domainId).topics.find(t => t.id === topicId);
+}
+function findSub(domainId, topicId, subId) {
+  return findTopic(domainId, topicId).subtopics.find(s => s.id === subId);
+}
+
+function markDone(id) {
+  progress[id] = true;
+  saveProgress();
+  updateProgressDisplay();
+  updateSidebarItems();
+}
+function markUndone(id) {
+  delete progress[id];
+  saveProgress();
+  updateProgressDisplay();
+  updateSidebarItems();
+}
+function updateProgressDisplay() {
+  const total = totalSubtopics();
+  const done = doneCount();
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('nav-progress').textContent = `${done}/${total} · %${pct}`;
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ─── KENAR ÇUBUĞU ─────────────────────────────────────────
+function buildSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = '';
+  document.getElementById('sidebar-title').textContent = cert.title.toLowerCase();
+
+  cert.domains.forEach(domain => {
+    const domainEl = document.createElement('div');
+    domainEl.className = 'nav-domain';
+    domainEl.dataset.id = domain.id;
+    domainEl.innerHTML = `
+      <div class="nav-domain-header">
+        <span>${domain.title}</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    `;
+
+    const topicsEl = document.createElement('div');
+    topicsEl.className = 'nav-topics';
+
+    domain.topics.forEach(topic => {
+      const topicEl = document.createElement('div');
+      topicEl.className = 'nav-topic';
+      topicEl.dataset.id = topic.id;
+      topicEl.innerHTML = `
+        <div class="nav-topic-header">
+          <span>${topic.title}</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      `;
+
+      const subtopicsEl = document.createElement('div');
+      subtopicsEl.className = 'nav-subtopics';
+
+      topic.subtopics.forEach(sub => {
+        const subEl = document.createElement('div');
+        subEl.className = 'nav-subtopic' + (progress[sub.id] ? ' completed' : '');
+        subEl.dataset.id = sub.id;
+        subEl.textContent = sub.title;
+        subEl.onclick = () => showSubtopic(domain, topic, sub);
+        subtopicsEl.appendChild(subEl);
+      });
+
+      topicEl.appendChild(subtopicsEl);
+      topicEl.querySelector('.nav-topic-header').onclick = () => topicEl.classList.toggle('open');
+      topicsEl.appendChild(topicEl);
+    });
+
+    domainEl.appendChild(topicsEl);
+    domainEl.querySelector('.nav-domain-header').onclick = () => domainEl.classList.toggle('open');
+    nav.appendChild(domainEl);
+  });
+
+  document.getElementById('search-input').oninput = (e) => {
+    filterSidebar(e.target.value.toLowerCase().trim());
+  };
+}
+
+function filterSidebar(q) {
+  document.querySelectorAll('.nav-subtopic').forEach(el => {
+    if (!q) { el.style.display = ''; return; }
+    const match = el.textContent.toLowerCase().includes(q);
+    el.style.display = match ? '' : 'none';
+    if (match) {
+      el.closest('.nav-topic')?.classList.add('open');
+      el.closest('.nav-domain')?.classList.add('open');
+    }
+  });
+}
+
+function setActiveSubtopic(id) {
+  document.querySelectorAll('.nav-subtopic').forEach(el => {
+    el.classList.toggle('active', el.dataset.id === id);
+  });
+}
+
+function updateSidebarItems() {
+  document.querySelectorAll('.nav-subtopic[data-id]').forEach(el => {
+    el.classList.toggle('completed', !!progress[el.dataset.id]);
+  });
+}
+
+// ─── GÖRÜNÜMLER ───────────────────────────────────────────
+function showCertOverview() {
+  const main = document.getElementById('content-main');
+  document.getElementById('content-breadcrumb').innerHTML = `
+    <a href="index.html">Ana Sayfa</a>
+    <span class="sep">/</span>
+    <span class="current">${cert.title}</span>
+  `;
+  document.getElementById('content-actions').innerHTML = '';
+
+  const total = totalSubtopics();
+  const done = doneCount();
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  main.innerHTML = `
+    <div class="domain-overview">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+        <span style="font-size:2.8rem">${cert.icon}</span>
+        <div>
+          <h1 style="margin-bottom:2px">${cert.title}</h1>
+          <div style="color:var(--text-2);font-size:14px">${cert.subtitle}</div>
+        </div>
+      </div>
+      <div class="domain-meta">
+        <span class="cert-code">${cert.code}</span>
+        <span style="font-size:13px;color:var(--text-2)">${cert.description}</span>
+      </div>
+      <div style="margin-bottom:34px">
+        <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;color:var(--text-3);margin-bottom:2px">
+          <span>genel ilerleme</span><span>${done}/${total} alt konu · %${pct}</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <h3 style="font-family:var(--font-mono);font-size:12px;color:var(--lime);margin-bottom:16px">> domain'ler</h3>
+      <div class="subtopics-list">
+        ${cert.domains.map(d => {
+          const dt = countSubs(d), dd = doneSubs(d);
+          const dp = dt > 0 ? Math.round((dd / dt) * 100) : 0;
+          return `
+            <div class="subtopic-card ${dd === dt && dt > 0 ? 'done' : ''}" onclick="showDomain(findDomain('${d.id}'))">
+              <div class="icon">${dd === dt && dt > 0 ? '✅' : '📁'}</div>
+              <div class="info">
+                <h4>${d.title}</h4>
+                <p>${d.topics.length} konu · ${dt} alt konu · ${dd} tamam</p>
+                <div class="progress-bar-wrap" style="margin-top:8px;height:5px"><div class="progress-bar-fill" style="width:${dp}%"></div></div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function showDomain(domain) {
+  const main = document.getElementById('content-main');
+  document.getElementById('content-breadcrumb').innerHTML = `
+    <a href="#" onclick="showCertOverview();return false">${cert.title}</a>
+    <span class="sep">/</span>
+    <span class="current">${domain.title}</span>
+  `;
+  document.getElementById('content-actions').innerHTML = '';
+
+  const dt = countSubs(domain), dd = doneSubs(domain);
+  const dp = dt > 0 ? Math.round((dd / dt) * 100) : 0;
+
+  main.innerHTML = `
+    <div class="domain-overview">
+      <h1>${domain.title}</h1>
+      <div class="domain-meta">
+        <span class="weight-badge">${domain.topics.length} konu başlığı</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-3)">${dd}/${dt} alt konu · %${dp}</span>
+      </div>
+      <div class="subtopics-list">
+        ${domain.topics.map(t => {
+          const done = t.subtopics.filter(s => progress[s.id]).length;
+          const pct = t.subtopics.length > 0 ? Math.round((done / t.subtopics.length) * 100) : 0;
+          const full = done === t.subtopics.length && done > 0;
+          return `
+            <div class="subtopic-card ${full ? 'done' : ''}"
+                 onclick="showTopic(findDomain('${domain.id}'), findTopic('${domain.id}','${t.id}'))">
+              <div class="icon">${full ? '✅' : '📝'}</div>
+              <div class="info">
+                <h4>${t.title}</h4>
+                <p>${t.subtopics.length} alt konu · ${done} tamamlandı</p>
+                <div class="progress-bar-wrap" style="margin-top:8px;height:5px"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function showTopic(domain, topic) {
+  const main = document.getElementById('content-main');
+  document.getElementById('content-breadcrumb').innerHTML = `
+    <a href="#" onclick="showCertOverview();return false">${cert.title}</a>
+    <span class="sep">/</span>
+    <a href="#" onclick="showDomain(findDomain('${domain.id}'));return false">${domain.title}</a>
+    <span class="sep">/</span>
+    <span class="current">${topic.title}</span>
+  `;
+  document.getElementById('content-actions').innerHTML = '';
+
+  main.innerHTML = `
+    <div class="topic-overview">
+      <h1>${topic.title}</h1>
+      <p class="description">Bir alt başlık seç, kendi notlarını yaz. Markdown destekli.</p>
+      <div class="subtopics-list">
+        ${topic.subtopics.map(s => `
+          <div class="subtopic-card ${progress[s.id] ? 'done' : ''}"
+               onclick="showSubtopic(findDomain('${domain.id}'), findTopic('${domain.id}','${topic.id}'), findSub('${domain.id}','${topic.id}','${s.id}'))">
+            <div class="icon">${progress[s.id] ? '✅' : '📄'}</div>
+            <div class="info">
+              <h4>${s.title}</h4>
+              <p class="status">${progress[s.id] ? 'tamamlandı' : loadWiki(s.id) ? 'taslak mevcut' : 'henüz not yok'}</p>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function showSubtopic(domain, topic, sub) {
+  setActiveSubtopic(sub.id);
+  document.querySelector(`.nav-domain[data-id="${domain.id}"]`)?.classList.add('open');
+  document.querySelector(`.nav-topic[data-id="${topic.id}"]`)?.classList.add('open');
+
+  document.getElementById('content-breadcrumb').innerHTML = `
+    <a href="#" onclick="showCertOverview();return false">${cert.title}</a>
+    <span class="sep">/</span>
+    <a href="#" onclick="showDomain(findDomain('${domain.id}'));return false">${domain.title}</a>
+    <span class="sep">/</span>
+    <a href="#" onclick="showTopic(findDomain('${domain.id}'),findTopic('${domain.id}','${topic.id}'));return false">${topic.title}</a>
+    <span class="sep">/</span>
+    <span class="current">${sub.title}</span>
+  `;
+
+  const isDone = !!progress[sub.id];
+  document.getElementById('content-actions').innerHTML = `
+    <button class="btn ${isDone ? 'btn-danger' : 'btn-success'}" id="toggle-done-btn"
+            onclick="toggleDone('${sub.id}', this)">
+      ${isDone
+        ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/></svg> Tamamlanmadı`
+        : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Tamamlandı`}
+    </button>
+  `;
+
+  const existing = loadWiki(sub.id);
+  const lastSaved = getLastSaved(sub.id);
+  let isPreview = false;
+  let autoSaveTimer = null;
+
+  const main = document.getElementById('content-main');
+  main.innerHTML = `
+    <div class="wiki-editor-page">
+      <div class="wiki-header">
+        <div class="wiki-meta">
+          <span class="tag">📝 wiki</span>
+          <span class="tag">${cert.title}</span>
+        </div>
+        <h1>${sub.title}</h1>
+        <div class="last-saved" id="last-saved-info">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          ${lastSaved ? `son kayıt: ${lastSaved}` : 'henüz kaydedilmedi'}
+        </div>
+      </div>
+
+      <div class="editor-toolbar">
+        <button class="toolbar-btn" onclick="insertMd('## ', '')"><b>H</b></button>
+        <button class="toolbar-btn" onclick="insertMd('**', '**')"><b>B</b></button>
+        <button class="toolbar-btn" onclick="insertMd('*', '*')"><em>I</em></button>
+        <button class="toolbar-btn" onclick="insertMd('\`', '\`')">&lt;/&gt;</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn" onclick="insertMd('\\n- ', '')">• liste</button>
+        <button class="toolbar-btn" onclick="insertMd('\\n> ', '')">&ldquo; alıntı</button>
+        <button class="toolbar-btn" onclick="insertMd('\\n\`\`\`\\n', '\\n\`\`\`')">{ } kod</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn" onclick="insertMd('---\\n', '')">— bölüm</button>
+        <button class="toolbar-btn" onclick="insertTable()">⊞ tablo</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn" id="preview-toggle-btn" onclick="togglePreview()">👁 önizleme</button>
+      </div>
+
+      <div class="editor-wrapper">
+        <textarea id="wiki-content" placeholder="Bu konuyla ilgili notlarını buraya yaz...
+
+Markdown desteklenir:
+## Başlık
+**kalın**  *italik*  \`kod\`
+- liste maddesi
+> alıntı
+\`\`\`
+kod bloğu
+\`\`\`">${escapeHtml(existing)}</textarea>
+        <div class="wiki-preview" id="wiki-preview"></div>
+      </div>
+
+      <div class="editor-actions">
+        <button class="btn btn-primary" onclick="saveContent('${sub.id}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Kaydet
+        </button>
+        <button class="btn btn-secondary" onclick="clearContent('${sub.id}')">Temizle</button>
+        <div class="save-indicator" id="save-indicator">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          <span id="save-msg">kaydedildi</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const textarea = document.getElementById('wiki-content');
+  textarea.addEventListener('input', () => {
+    clearTimeout(autoSaveTimer);
+    showSaveIndicator('saving', 'kaydediliyor...');
+    autoSaveTimer = setTimeout(() => {
+      saveWikiWithTimestamp(sub.id, textarea.value);
+      showSaveIndicator('saved', 'otomatik kaydedildi');
+    }, 1500);
+  });
+
+  window.insertMd = (before, after) => {
+    const ta = document.getElementById('wiki-content');
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    const sel = ta.value.substring(start, end);
+    const b = before.replace(/\\n/g, '\n'), a = after.replace(/\\n/g, '\n');
+    const replacement = b + sel + a;
+    ta.value = ta.value.substring(0, start) + replacement + ta.value.substring(end);
+    ta.focus();
+    ta.selectionStart = start + b.length;
+    ta.selectionEnd = start + replacement.length - a.length;
+  };
+
+  window.insertTable = () => {
+    const ta = document.getElementById('wiki-content');
+    const table = '\n| Sütun 1 | Sütun 2 | Sütun 3 |\n|---------|---------|----------|\n| Veri 1  | Veri 2  | Veri 3   |\n';
+    const pos = ta.selectionStart;
+    ta.value = ta.value.substring(0, pos) + table + ta.value.substring(pos);
+    ta.focus();
+  };
+
+  window.togglePreview = () => {
+    isPreview = !isPreview;
+    const ta = document.getElementById('wiki-content');
+    const pv = document.getElementById('wiki-preview');
+    const btn = document.getElementById('preview-toggle-btn');
+    if (isPreview) {
+      pv.innerHTML = renderMarkdown(ta.value);
+      pv.style.display = 'block';
+      ta.style.display = 'none';
+      btn.classList.add('active');
+      btn.textContent = '✏️ düzenle';
+    } else {
+      pv.style.display = 'none';
+      ta.style.display = 'block';
+      btn.classList.remove('active');
+      btn.textContent = '👁 önizleme';
+      ta.focus();
+    }
+  };
+}
+
+window.saveContent = (id) => {
+  const ta = document.getElementById('wiki-content');
+  saveWikiWithTimestamp(id, ta.value);
+  document.getElementById('last-saved-info').innerHTML = `
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    son kayıt: ${new Date().toLocaleString('tr-TR')}
+  `;
+  showSaveIndicator('saved', 'kaydedildi');
+  showToast('İçerik kaydedildi ✓', 'success');
+};
+
+window.clearContent = (id) => {
+  if (!confirm('Bu sayfanın içeriği silinsin mi?')) return;
+  document.getElementById('wiki-content').value = '';
+  saveWikiWithTimestamp(id, '');
+  showToast('İçerik temizlendi', 'info');
+};
+
+window.toggleDone = (id, btn) => {
+  if (progress[id]) {
+    markUndone(id);
+    btn.className = 'btn btn-success';
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Tamamlandı`;
+    showToast('Tamamlanmadı olarak işaretlendi', 'info');
+  } else {
+    markDone(id);
+    btn.className = 'btn btn-danger';
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/></svg> Tamamlanmadı`;
+    showToast('Tamamlandı olarak işaretlendi! 🎉', 'success');
+  }
+};
+
+function showSaveIndicator(type, msg) {
+  const ind = document.getElementById('save-indicator');
+  if (!ind) return;
+  ind.className = `save-indicator visible ${type}`;
+  document.getElementById('save-msg').textContent = msg;
+  if (type === 'saved') setTimeout(() => ind.classList.remove('visible'), 2500);
+}
+
+// ─── MARKDOWN ─────────────────────────────────────────────
+function renderMarkdown(md) {
+  if (!md.trim()) return '<p style="color:var(--text-3)">İçerik yok.</p>';
+  let html = escapeHtml(md);
+
+  const codeBlocks = [];
+  html = html.replace(/```([\s\S]*?)```/g, (_, code) => {
+    codeBlocks.push(`<pre><code>${code.trim()}</code></pre>`);
+    return `%%CODEBLOCK${codeBlocks.length - 1}%%`;
+  });
+
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+  html = html.replace(/^---$/gm, '<hr>');
+
+  html = html.replace(/(\|.+\|\n\|[-|: ]+\|\n(?:\|.+\|\n?)*)/g, (table) => {
+    const rows = table.trim().split('\n');
+    const headers = rows[0].split('|').filter(c => c.trim()).map(c => `<th>${c.trim()}</th>`).join('');
+    const body = rows.slice(2).map(r => {
+      const cells = r.split('|').filter(c => c.trim()).map(c => `<td>${c.trim()}</td>`).join('');
+      return `<tr>${cells}</tr>`;
+    }).join('');
+    return `<table><thead><tr>${headers}</tr></thead><tbody>${body}</tbody></table>`;
+  });
+
+  html = html.replace(/((?:^- .+\n?)+)/gm, (m) => {
+    const items = m.trim().split('\n').map(l => `<li>${l.replace(/^- /, '')}</li>`).join('');
+    return `<ul>${items}</ul>`;
+  });
+  html = html.replace(/((?:^\d+\. .+\n?)+)/gm, (m) => {
+    const items = m.trim().split('\n').map(l => `<li>${l.replace(/^\d+\. /, '')}</li>`).join('');
+    return `<ol>${items}</ol>`;
+  });
+
+  html = html.split(/\n{2,}/).map(block => {
+    block = block.trim();
+    if (!block) return '';
+    if (block.startsWith('<')) return block;
+    return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+  }).join('');
+
+  codeBlocks.forEach((cb, i) => {
+    html = html.replace(`%%CODEBLOCK${i}%%`, cb);
+  });
+  return html;
+}
+
+// ─── BAŞLAT ───────────────────────────────────────────────
+document.getElementById('top-breadcrumb').innerHTML = `
+  <a href="index.html">Ana Sayfa</a>
+  <span class="sep">/</span>
+  <span class="current">${cert.title} — ${cert.subtitle}</span>
+`;
+
+buildSidebar();
+showCertOverview();
+updateProgressDisplay();
+</script>
+</body>
+</html>
