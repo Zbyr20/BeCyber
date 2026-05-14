@@ -7,15 +7,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <!-- Üst nav -->
 <nav class="nav-bar">
-  <a href="index.html" class="nav-logo">BeCyber</a>
+  <a href="/" class="nav-logo">BeCyber</a>
   <div class="breadcrumb" id="top-breadcrumb">
-    <a href="index.html">Ana Sayfa</a>
+    <a href="/">Ana Sayfa</a>
   </div>
   <div id="nav-progress"></div>
 </nav>
@@ -54,14 +54,14 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script src="js/data.js"></script>
+<script src="/js/data.js"></script>
 <script>
 // ─── DURUM ────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
 const certId = params.get('cert');
 
 const cert = CERTIFICATIONS.find(c => c.id === certId);
-if (!cert) { location.href = 'index.html'; }
+if (!cert) { location.href = '/'; }
 
 let progress = loadProgress();
 
@@ -226,7 +226,7 @@ function updateSidebarItems() {
 function showCertOverview() {
   const main = document.getElementById('content-main');
   document.getElementById('content-breadcrumb').innerHTML = `
-    <a href="index.html">Ana Sayfa</a>
+    <a href="/">Ana Sayfa</a>
     <span class="sep">/</span>
     <span class="current">${cert.title}</span>
   `;
@@ -585,7 +585,7 @@ function renderMarkdown(md) {
 
 // ─── BAŞLAT ───────────────────────────────────────────────
 document.getElementById('top-breadcrumb').innerHTML = `
-  <a href="index.html">Ana Sayfa</a>
+  <a href="/">Ana Sayfa</a>
   <span class="sep">/</span>
   <span class="current">${cert.title} — ${cert.subtitle}</span>
 `;
