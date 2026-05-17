@@ -161,495 +161,261 @@ const CERTIFICATIONS = [
     id: "associate",
     title: "Associate",
     subtitle: "CyberOps Associate",
-    code: "200-201 CBROPS v1.2",
+    code: "NetAcad CyberOps Associate v1.0",
     level: 1,
     color: "#5eb3c4",
     gradient: "linear-gradient(135deg, #173a45, #1f5563)",
     icon: "🔵",
-    description: "SOC analist kariyerine hazırlık. Resmi 200-201 CBROPS v1.2 blueprint'i.",
+    description: "SOC analist kariyerine hazırlık. Cisco NetAcad CyberOps Associate kurs müfredatı (28 modül).",
     badge: "Associate",
     domains: [
       {
-        id: "cbr-d1",
-        title: "1.0 Security Concepts (%20)",
+        id: "cba-g1",
+        title: "Threat Actors and Defenders",
         topics: [
           {
-            id: "cbr-1-1",
-            title: "1.1 Describe the CIA triad",
+            id: "cba-m1",
+            title: "Module 1: The Danger",
             subtopics: [
-              { id: "cbr-1-1-x", title: "Describe the CIA triad" }
+              { id: "cba-1-0", title: "1.0 Introduction" },
+              { id: "cba-1-1", title: "1.1 War Stories" },
+              { id: "cba-1-2", title: "1.2 Threat Actors" },
+              { id: "cba-1-3", title: "1.3 Threat Impact" },
+              { id: "cba-1-4", title: "1.4 The Danger Summary" }
             ]
           },
           {
-            id: "cbr-1-2",
-            title: "1.2 Compare security deployments",
+            id: "cba-m2",
+            title: "Module 2: Fighters in the War Against Cybercrime",
             subtopics: [
-              { id: "cbr-1-2-a", title: "Network, endpoint, and application security systems" },
-              { id: "cbr-1-2-b", title: "Agentless and agent-based protections" },
-              { id: "cbr-1-2-c", title: "Legacy antivirus and antimalware" },
-              { id: "cbr-1-2-d", title: "SIEM, SOAR, and log management" },
-              { id: "cbr-1-2-e", title: "Container and virtual environments" },
-              { id: "cbr-1-2-f", title: "Cloud security deployments" }
-            ]
-          },
-          {
-            id: "cbr-1-3",
-            title: "1.3 Describe security terms",
-            subtopics: [
-              { id: "cbr-1-3-a", title: "Threat intelligence (TI)" },
-              { id: "cbr-1-3-b", title: "Threat hunting" },
-              { id: "cbr-1-3-c", title: "Malware analysis" },
-              { id: "cbr-1-3-d", title: "Threat actor" },
-              { id: "cbr-1-3-e", title: "Run book automation (RBA)" },
-              { id: "cbr-1-3-f", title: "Reverse engineering" },
-              { id: "cbr-1-3-g", title: "Sliding window anomaly detection" },
-              { id: "cbr-1-3-h", title: "Threat modeling" },
-              { id: "cbr-1-3-i", title: "DevSecOps" }
-            ]
-          },
-          {
-            id: "cbr-1-4",
-            title: "1.4 Compare security concepts",
-            subtopics: [
-              { id: "cbr-1-4-a", title: "Risk (risk scoring/risk weighting, risk reduction, risk assessment)" },
-              { id: "cbr-1-4-b", title: "Threat" },
-              { id: "cbr-1-4-c", title: "Vulnerability" },
-              { id: "cbr-1-4-d", title: "Exploit" }
-            ]
-          },
-          {
-            id: "cbr-1-5",
-            title: "1.5 Describe the principles of the defense-in-depth strategy",
-            subtopics: [
-              { id: "cbr-1-5-x", title: "Describe the principles of the defense-in-depth strategy" }
-            ]
-          },
-          {
-            id: "cbr-1-6",
-            title: "1.6 Compare access control models",
-            subtopics: [
-              { id: "cbr-1-6-a", title: "Discretionary access control" },
-              { id: "cbr-1-6-b", title: "Mandatory access control" },
-              { id: "cbr-1-6-c", title: "Nondiscretionary access control" },
-              { id: "cbr-1-6-d", title: "Authentication, authorization, accounting" },
-              { id: "cbr-1-6-e", title: "Rule-based access control" },
-              { id: "cbr-1-6-f", title: "Time-based access control" },
-              { id: "cbr-1-6-g", title: "Role-based access control" },
-              { id: "cbr-1-6-h", title: "Attribute-based access control" }
-            ]
-          },
-          {
-            id: "cbr-1-7",
-            title: "1.7 Describe terms as defined in CVSS",
-            subtopics: [
-              { id: "cbr-1-7-a", title: "Attack vector" },
-              { id: "cbr-1-7-b", title: "Attack complexity" },
-              { id: "cbr-1-7-c", title: "Privileges required" },
-              { id: "cbr-1-7-d", title: "User interaction" },
-              { id: "cbr-1-7-e", title: "Scope" },
-              { id: "cbr-1-7-f", title: "Temporal metrics" },
-              { id: "cbr-1-7-g", title: "Environmental metrics" }
-            ]
-          },
-          {
-            id: "cbr-1-8",
-            title: "1.8 Identify the challenges of data visibility (network, host, and cloud) in detection",
-            subtopics: [
-              { id: "cbr-1-8-x", title: "Identify the challenges of data visibility (network, host, and cloud) in detection" }
-            ]
-          },
-          {
-            id: "cbr-1-9",
-            title: "1.9 Identify potential data loss from traffic profiles",
-            subtopics: [
-              { id: "cbr-1-9-x", title: "Identify potential data loss from traffic profiles" }
-            ]
-          },
-          {
-            id: "cbr-1-10",
-            title: "1.10 Interpret the 5-tuple approach to isolate a compromised host in a grouped set of logs",
-            subtopics: [
-              { id: "cbr-1-10-x", title: "Interpret the 5-tuple approach to isolate a compromised host in a grouped set of logs" }
-            ]
-          },
-          {
-            id: "cbr-1-11",
-            title: "1.11 Compare rule-based detection vs. behavioral and statistical detection",
-            subtopics: [
-              { id: "cbr-1-11-x", title: "Compare rule-based detection vs. behavioral and statistical detection" }
+              { id: "cba-2-0", title: "2.0 Introduction" },
+              { id: "cba-2-1", title: "2.1 The Modern Security Operations Center" },
+              { id: "cba-2-2", title: "2.2 Becoming a Defender" },
+              { id: "cba-2-3", title: "2.3 Fighters in the War Against Cybercrime Summary" }
             ]
           }
         ]
       },
       {
-        id: "cbr-d2",
-        title: "2.0 Security Monitoring (%25)",
+        id: "cba-g2",
+        title: "Operating Systems",
         topics: [
           {
-            id: "cbr-2-1",
-            title: "2.1 Compare attack surface and vulnerability",
+            id: "cba-m3",
+            title: "Module 3: The Windows Operating System",
             subtopics: [
-              { id: "cbr-2-1-x", title: "Compare attack surface and vulnerability" }
+              { id: "cba-3-x", title: "The Windows Operating System" }
             ]
           },
           {
-            id: "cbr-2-2",
-            title: "2.2 Identify the types of data provided by these technologies",
+            id: "cba-m4",
+            title: "Module 4: Linux Overview",
             subtopics: [
-              { id: "cbr-2-2-a", title: "TCP dump" },
-              { id: "cbr-2-2-b", title: "NetFlow" },
-              { id: "cbr-2-2-c", title: "Next-gen firewall" },
-              { id: "cbr-2-2-d", title: "Traditional stateful firewall" },
-              { id: "cbr-2-2-e", title: "Application visibility and control" },
-              { id: "cbr-2-2-f", title: "Web content filtering" },
-              { id: "cbr-2-2-g", title: "Email content filtering" }
-            ]
-          },
-          {
-            id: "cbr-2-3",
-            title: "2.3 Describe the impact of these technologies on data visibility",
-            subtopics: [
-              { id: "cbr-2-3-a", title: "Access control list" },
-              { id: "cbr-2-3-b", title: "NAT/PAT" },
-              { id: "cbr-2-3-c", title: "Tunneling" },
-              { id: "cbr-2-3-d", title: "TOR" },
-              { id: "cbr-2-3-e", title: "Encryption" },
-              { id: "cbr-2-3-f", title: "P2P" },
-              { id: "cbr-2-3-g", title: "Encapsulation" },
-              { id: "cbr-2-3-h", title: "Load balancing" }
-            ]
-          },
-          {
-            id: "cbr-2-4",
-            title: "2.4 Describe the uses of these data types in security monitoring",
-            subtopics: [
-              { id: "cbr-2-4-a", title: "Full packet capture" },
-              { id: "cbr-2-4-b", title: "Session data" },
-              { id: "cbr-2-4-c", title: "Transaction data" },
-              { id: "cbr-2-4-d", title: "Statistical data" },
-              { id: "cbr-2-4-e", title: "Metadata" },
-              { id: "cbr-2-4-f", title: "Alert data" }
-            ]
-          },
-          {
-            id: "cbr-2-5",
-            title: "2.5 Describe network attacks, such as protocol-based, denial of service, distributed denial of service, and man-in-the-middle",
-            subtopics: [
-              { id: "cbr-2-5-x", title: "Describe network attacks, such as protocol-based, denial of service, distributed denial of service, and man-in-the-middle" }
-            ]
-          },
-          {
-            id: "cbr-2-6",
-            title: "2.6 Describe web application attacks, such as SQL injection, command injections, and cross-site scripting",
-            subtopics: [
-              { id: "cbr-2-6-x", title: "Describe web application attacks, such as SQL injection, command injections, and cross-site scripting" }
-            ]
-          },
-          {
-            id: "cbr-2-7",
-            title: "2.7 Describe social engineering attacks (manual and generative AI)",
-            subtopics: [
-              { id: "cbr-2-7-x", title: "Describe social engineering attacks (manual and generative AI)" }
-            ]
-          },
-          {
-            id: "cbr-2-8",
-            title: "2.8 Describe endpoint-based attacks, such as buffer overflows, command and control (C2), malware, and ransomware",
-            subtopics: [
-              { id: "cbr-2-8-x", title: "Describe endpoint-based attacks, such as buffer overflows, command and control (C2), malware, and ransomware" }
-            ]
-          },
-          {
-            id: "cbr-2-9",
-            title: "2.9 Describe evasion and obfuscation techniques, such as tunneling, encryption, and proxies",
-            subtopics: [
-              { id: "cbr-2-9-x", title: "Describe evasion and obfuscation techniques, such as tunneling, encryption, and proxies" }
-            ]
-          },
-          {
-            id: "cbr-2-10",
-            title: "2.10 Describe the impact of certificates on security (includes PKI, public/private crossing the network, asymmetric/symmetric)",
-            subtopics: [
-              { id: "cbr-2-10-x", title: "Describe the impact of certificates on security (includes PKI, public/private crossing the network, asymmetric/symmetric)" }
-            ]
-          },
-          {
-            id: "cbr-2-11",
-            title: "2.11 Identify the certificate components in a given scenario",
-            subtopics: [
-              { id: "cbr-2-11-a", title: "Cipher-suite" },
-              { id: "cbr-2-11-b", title: "X.509 certificates" },
-              { id: "cbr-2-11-c", title: "Key exchange" },
-              { id: "cbr-2-11-d", title: "Protocol version" },
-              { id: "cbr-2-11-e", title: "PKCS" }
+              { id: "cba-4-x", title: "Linux Overview" }
             ]
           }
         ]
       },
       {
-        id: "cbr-d3",
-        title: "3.0 Host-Based Analysis (%20)",
+        id: "cba-g3",
+        title: "Network Communications and Connectivity",
         topics: [
           {
-            id: "cbr-3-1",
-            title: "3.1 Describe the functionality of these endpoint technologies in regard to security monitoring utilizing rules, signatures, and predictive AI",
+            id: "cba-m5",
+            title: "Module 5: Network Protocols",
             subtopics: [
-              { id: "cbr-3-1-a", title: "Host-based intrusion detection" },
-              { id: "cbr-3-1-b", title: "Antimalware and antivirus" },
-              { id: "cbr-3-1-c", title: "Host-based firewall" }
+              { id: "cba-5-x", title: "Network Protocols" }
             ]
           },
           {
-            id: "cbr-3-2",
-            title: "3.2 Identify components of an operating system (such as Windows and Linux) in a given scenario",
+            id: "cba-m6",
+            title: "Module 6: Ethernet and Internet Protocol (IP)",
             subtopics: [
-              { id: "cbr-3-2-x", title: "Identify components of an operating system (such as Windows and Linux) in a given scenario" }
+              { id: "cba-6-x", title: "Ethernet and Internet Protocol (IP)" }
             ]
           },
           {
-            id: "cbr-3-3",
-            title: "3.3 Describe the role of attribution in an investigation",
+            id: "cba-m7",
+            title: "Module 7: Connectivity Verification",
             subtopics: [
-              { id: "cbr-3-3-a", title: "Assets" },
-              { id: "cbr-3-3-b", title: "Threat actor" },
-              { id: "cbr-3-3-c", title: "Indicators of compromise" },
-              { id: "cbr-3-3-d", title: "Indicators of attack" },
-              { id: "cbr-3-3-e", title: "Chain of custody" }
+              { id: "cba-7-x", title: "Connectivity Verification" }
             ]
           },
           {
-            id: "cbr-3-4",
-            title: "3.4 Identify type of evidence used based on provided logs",
+            id: "cba-m8",
+            title: "Module 8: Address Resolution Protocol",
             subtopics: [
-              { id: "cbr-3-4-a", title: "Best evidence" },
-              { id: "cbr-3-4-b", title: "Corroborative evidence" },
-              { id: "cbr-3-4-c", title: "Indirect evidence" }
+              { id: "cba-8-x", title: "Address Resolution Protocol" }
             ]
           },
           {
-            id: "cbr-3-5",
-            title: "3.5 Interpret operating system, SIEM, SOAR platform, application, or command line logs to identify an event",
+            id: "cba-m9",
+            title: "Module 9: The Transport Layer",
             subtopics: [
-              { id: "cbr-3-5-x", title: "Interpret operating system, SIEM, SOAR platform, application, or command line logs to identify an event" }
+              { id: "cba-9-x", title: "The Transport Layer" }
             ]
           },
           {
-            id: "cbr-3-6",
-            title: "3.6 Interpret the output report of malware analysis tools such as a detonation chamber or sandbox",
+            id: "cba-m10",
+            title: "Module 10: Network Services",
             subtopics: [
-              { id: "cbr-3-6-a", title: "Hashes" },
-              { id: "cbr-3-6-b", title: "URLs" },
-              { id: "cbr-3-6-c", title: "Systems, events, and networking" }
+              { id: "cba-10-x", title: "Network Services" }
             ]
           }
         ]
       },
       {
-        id: "cbr-d4",
-        title: "4.0 Network Intrusion Analysis (%20)",
+        id: "cba-g4",
+        title: "Network Infrastructure and Operations",
         topics: [
           {
-            id: "cbr-4-1",
-            title: "4.1 Map the provided events to source technologies",
+            id: "cba-m11",
+            title: "Module 11: Network Communication Devices",
             subtopics: [
-              { id: "cbr-4-1-a", title: "IDS/IPS" },
-              { id: "cbr-4-1-b", title: "Firewall" },
-              { id: "cbr-4-1-c", title: "Network application control" },
-              { id: "cbr-4-1-d", title: "Proxy logs" },
-              { id: "cbr-4-1-e", title: "Antivirus" },
-              { id: "cbr-4-1-f", title: "Transaction data (NetFlow)" }
+              { id: "cba-11-x", title: "Network Communication Devices" }
             ]
           },
           {
-            id: "cbr-4-2",
-            title: "4.2 Compare impact and no impact for these items",
+            id: "cba-m12",
+            title: "Module 12: Network Security Infrastructure",
             subtopics: [
-              { id: "cbr-4-2-a", title: "False positive" },
-              { id: "cbr-4-2-b", title: "False negative" },
-              { id: "cbr-4-2-c", title: "True positive" },
-              { id: "cbr-4-2-d", title: "True negative" },
-              { id: "cbr-4-2-e", title: "Benign" }
-            ]
-          },
-          {
-            id: "cbr-4-3",
-            title: "4.3 Compare deep packet inspection with packet filtering and stateful firewall operation",
-            subtopics: [
-              { id: "cbr-4-3-x", title: "Compare deep packet inspection with packet filtering and stateful firewall operation" }
-            ]
-          },
-          {
-            id: "cbr-4-4",
-            title: "4.4 Compare inline traffic interrogation and taps or traffic monitoring",
-            subtopics: [
-              { id: "cbr-4-4-x", title: "Compare inline traffic interrogation and taps or traffic monitoring" }
-            ]
-          },
-          {
-            id: "cbr-4-5",
-            title: "4.5 Compare the characteristics of data obtained from taps or traffic monitoring and transactional data (NetFlow) in the analysis of network traffic",
-            subtopics: [
-              { id: "cbr-4-5-x", title: "Compare the characteristics of data obtained from taps or traffic monitoring and transactional data (NetFlow) in the analysis of network traffic" }
-            ]
-          },
-          {
-            id: "cbr-4-6",
-            title: "4.6 Extract files from a TCP stream when given a PCAP file and Wireshark",
-            subtopics: [
-              { id: "cbr-4-6-x", title: "Extract files from a TCP stream when given a PCAP file and Wireshark" }
-            ]
-          },
-          {
-            id: "cbr-4-7",
-            title: "4.7 Identify key elements in an intrusion from a given PCAP file",
-            subtopics: [
-              { id: "cbr-4-7-a", title: "Source address" },
-              { id: "cbr-4-7-b", title: "Destination address" },
-              { id: "cbr-4-7-c", title: "Source port" },
-              { id: "cbr-4-7-d", title: "Destination port" },
-              { id: "cbr-4-7-e", title: "Protocols" },
-              { id: "cbr-4-7-f", title: "Payloads" }
-            ]
-          },
-          {
-            id: "cbr-4-8",
-            title: "4.8 Interpret the fields in protocol headers as related to intrusion analysis",
-            subtopics: [
-              { id: "cbr-4-8-a", title: "Ethernet frame" },
-              { id: "cbr-4-8-b", title: "IPv4" },
-              { id: "cbr-4-8-c", title: "IPv6" },
-              { id: "cbr-4-8-d", title: "TCP" },
-              { id: "cbr-4-8-e", title: "UDP" },
-              { id: "cbr-4-8-f", title: "ICMP" },
-              { id: "cbr-4-8-g", title: "DNS" },
-              { id: "cbr-4-8-h", title: "SMTP/POP3/IMAP" },
-              { id: "cbr-4-8-i", title: "HTTP/HTTPS/HTTP2" },
-              { id: "cbr-4-8-j", title: "ARP" }
-            ]
-          },
-          {
-            id: "cbr-4-9",
-            title: "4.9 Interpret common artifact elements from an event to identify an alert",
-            subtopics: [
-              { id: "cbr-4-9-a", title: "IP address (source / destination)" },
-              { id: "cbr-4-9-b", title: "Client and server port identity" },
-              { id: "cbr-4-9-c", title: "Process (file or registry)" },
-              { id: "cbr-4-9-d", title: "System (API calls)" },
-              { id: "cbr-4-9-e", title: "Hashes" },
-              { id: "cbr-4-9-f", title: "URI / URL" }
-            ]
-          },
-          {
-            id: "cbr-4-10",
-            title: "4.10 Interpret basic regular expressions",
-            subtopics: [
-              { id: "cbr-4-10-x", title: "Interpret basic regular expressions" }
+              { id: "cba-12-x", title: "Network Security Infrastructure" }
             ]
           }
         ]
       },
       {
-        id: "cbr-d5",
-        title: "5.0 Security Policies and Procedures (%15)",
+        id: "cba-g5",
+        title: "Threats and Attacks",
         topics: [
           {
-            id: "cbr-5-1",
-            title: "5.1 Describe management concepts",
+            id: "cba-m13",
+            title: "Module 13: Attackers and Their Tools",
             subtopics: [
-              { id: "cbr-5-1-a", title: "Asset management" },
-              { id: "cbr-5-1-b", title: "Configuration management" },
-              { id: "cbr-5-1-c", title: "Mobile device management" },
-              { id: "cbr-5-1-d", title: "Patch management" },
-              { id: "cbr-5-1-e", title: "Vulnerability management" }
+              { id: "cba-13-x", title: "Attackers and Their Tools" }
             ]
           },
           {
-            id: "cbr-5-2",
-            title: "5.2 Describe the elements in an incident response plan as stated in NIST.SP800-61",
+            id: "cba-m14",
+            title: "Module 14: Common Threats and Attacks",
             subtopics: [
-              { id: "cbr-5-2-x", title: "Describe the elements in an incident response plan as stated in NIST.SP800-61" }
+              { id: "cba-14-x", title: "Common Threats and Attacks" }
             ]
           },
           {
-            id: "cbr-5-3",
-            title: "5.3 Apply the incident handling process such as NIST.SP800-61 to an event",
+            id: "cba-m15",
+            title: "Module 15: Network Monitoring and Tools",
             subtopics: [
-              { id: "cbr-5-3-x", title: "Apply the incident handling process such as NIST.SP800-61 to an event" }
+              { id: "cba-15-x", title: "Network Monitoring and Tools" }
             ]
           },
           {
-            id: "cbr-5-4",
-            title: "5.4 Map elements to these steps of analysis based on the NIST.SP800-61",
+            id: "cba-m16",
+            title: "Module 16: Attacking the Foundation",
             subtopics: [
-              { id: "cbr-5-4-a", title: "Preparation" },
-              { id: "cbr-5-4-b", title: "Detection and analysis" },
-              { id: "cbr-5-4-c", title: "Containment, eradication, and recovery" },
-              { id: "cbr-5-4-d", title: "Post-incident analysis (lessons learned)" }
+              { id: "cba-16-x", title: "Attacking the Foundation" }
             ]
           },
           {
-            id: "cbr-5-5",
-            title: "5.5 Map the organization stakeholders against the NIST IR categories (CMMC, NIST.SP800-61)",
+            id: "cba-m17",
+            title: "Module 17: Attacking What We Do",
             subtopics: [
-              { id: "cbr-5-5-a", title: "Preparation" },
-              { id: "cbr-5-5-b", title: "Detection and analysis" },
-              { id: "cbr-5-5-c", title: "Containment, eradication, and recovery" },
-              { id: "cbr-5-5-d", title: "Post-incident analysis (lessons learned)" }
+              { id: "cba-17-x", title: "Attacking What We Do" }
+            ]
+          }
+        ]
+      },
+      {
+        id: "cba-g6",
+        title: "Network Defense",
+        topics: [
+          {
+            id: "cba-m18",
+            title: "Module 18: Understanding Defense",
+            subtopics: [
+              { id: "cba-18-x", title: "Understanding Defense" }
             ]
           },
           {
-            id: "cbr-5-6",
-            title: "5.6 Describe concepts as documented in NIST.SP800-86",
+            id: "cba-m19",
+            title: "Module 19: Access Control",
             subtopics: [
-              { id: "cbr-5-6-a", title: "Evidence collection order" },
-              { id: "cbr-5-6-b", title: "Data integrity" },
-              { id: "cbr-5-6-c", title: "Data preservation" },
-              { id: "cbr-5-6-d", title: "Volatile data collection" }
+              { id: "cba-19-x", title: "Access Control" }
             ]
           },
           {
-            id: "cbr-5-7",
-            title: "5.7 Identify these elements used for network profiling",
+            id: "cba-m20",
+            title: "Module 20: Threat Intelligence",
             subtopics: [
-              { id: "cbr-5-7-a", title: "Total throughput" },
-              { id: "cbr-5-7-b", title: "Session duration" },
-              { id: "cbr-5-7-c", title: "Ports used" },
-              { id: "cbr-5-7-d", title: "Critical asset address space" }
+              { id: "cba-20-x", title: "Threat Intelligence" }
             ]
           },
           {
-            id: "cbr-5-8",
-            title: "5.8 Identify these elements used for server profiling",
+            id: "cba-m21",
+            title: "Module 21: Cryptography",
             subtopics: [
-              { id: "cbr-5-8-a", title: "Listening ports" },
-              { id: "cbr-5-8-b", title: "Logged in users/service accounts" },
-              { id: "cbr-5-8-c", title: "Running processes" },
-              { id: "cbr-5-8-d", title: "Running tasks" },
-              { id: "cbr-5-8-e", title: "Applications" }
+              { id: "cba-21-x", title: "Cryptography" }
+            ]
+          }
+        ]
+      },
+      {
+        id: "cba-g7",
+        title: "Endpoint Security",
+        topics: [
+          {
+            id: "cba-m22",
+            title: "Module 22: Endpoint Protection",
+            subtopics: [
+              { id: "cba-22-x", title: "Endpoint Protection" }
             ]
           },
           {
-            id: "cbr-5-9",
-            title: "5.9 Identify protected data in a network",
+            id: "cba-m23",
+            title: "Module 23: Endpoint Vulnerability Assessment",
             subtopics: [
-              { id: "cbr-5-9-a", title: "PII" },
-              { id: "cbr-5-9-b", title: "PSI" },
-              { id: "cbr-5-9-c", title: "PHI" },
-              { id: "cbr-5-9-d", title: "Intellectual property" }
+              { id: "cba-23-x", title: "Endpoint Vulnerability Assessment" }
+            ]
+          }
+        ]
+      },
+      {
+        id: "cba-g8",
+        title: "Security Monitoring, Forensics, and Incident Response",
+        topics: [
+          {
+            id: "cba-m24",
+            title: "Module 24: Technologies and Protocols",
+            subtopics: [
+              { id: "cba-24-x", title: "Technologies and Protocols" }
             ]
           },
           {
-            id: "cbr-5-10",
-            title: "5.10 Classify intrusion events into categories as defined by security models, such as Cyber Kill Chain Model and Diamond Model of Intrusion",
+            id: "cba-m25",
+            title: "Module 25: Network Security Data",
             subtopics: [
-              { id: "cbr-5-10-x", title: "Classify intrusion events into categories as defined by security models, such as Cyber Kill Chain Model and Diamond Model of Intrusion" }
+              { id: "cba-25-x", title: "Network Security Data" }
             ]
           },
           {
-            id: "cbr-5-11",
-            title: "5.11 Describe the relationship of SOC metrics to scope analysis (time to detect, time to contain, time to respond, time to control)",
+            id: "cba-m26",
+            title: "Module 26: Evaluating Alerts",
             subtopics: [
-              { id: "cbr-5-11-x", title: "Describe the relationship of SOC metrics to scope analysis (time to detect, time to contain, time to respond, time to control)" }
+              { id: "cba-26-x", title: "Evaluating Alerts" }
+            ]
+          },
+          {
+            id: "cba-m27",
+            title: "Module 27: Working with Network Security Data",
+            subtopics: [
+              { id: "cba-27-x", title: "Working with Network Security Data" }
+            ]
+          },
+          {
+            id: "cba-m28",
+            title: "Module 28: Digital Forensics and Incident Analysis and Response",
+            subtopics: [
+              { id: "cba-28-x", title: "Digital Forensics and Incident Analysis and Response" }
             ]
           }
         ]
