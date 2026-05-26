@@ -13,6 +13,11 @@
 
 <!-- Üst nav -->
 <nav class="nav-bar">
+  <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Menüyü aç/kapat">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
   <a href="/" class="nav-logo">BeCyber</a>
   <div class="breadcrumb" id="top-breadcrumb">
     <a href="/">Ana Sayfa</a>
@@ -20,11 +25,17 @@
   <div id="nav-progress"></div>
 </nav>
 
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 <div class="learn-layout">
   <!-- Kenar çubuğu -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h3 id="sidebar-title">müfredat</h3>
+      <div class="sidebar-header-row">
+        <h3 id="sidebar-title">müfredat</h3>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Menüyü kapat">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
       <div class="sidebar-search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -349,6 +360,7 @@ function showTopic(domain, topic) {
 }
 
 function showSubtopic(domain, topic, sub) {
+  if (window.innerWidth <= 768) closeSidebar();
   setActiveSubtopic(sub.id);
   document.querySelector(`.nav-domain[data-id="${domain.id}"]`)?.classList.add('open');
   document.querySelector(`.nav-topic[data-id="${topic.id}"]`)?.classList.add('open');
@@ -598,6 +610,21 @@ window.clearContent = (id) => {
   saveWikiWithTimestamp(id, '');
   showToast('İçerik temizlendi', 'info');
 };
+
+// ─── MOBİL SIDEBAR TOGGLE ─────────────────────────────────
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+document.getElementById('sidebar-toggle').addEventListener('click', openSidebar);
+document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
 
 // Loading göstergesi
 document.getElementById('content-main').innerHTML = `

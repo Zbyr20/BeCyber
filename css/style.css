@@ -1134,3 +1134,145 @@ a { color: inherit; }
   .content-topbar { padding: 12px 20px; }
   .editor-toolbar { padding: 7px 8px; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   HAMBURGER + SIDEBAR DRAWER (her ekranda tanımlı, mobilde aktif)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Hamburger butonu — masaüstünde gizli */
+.sidebar-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.sidebar-toggle:hover { border-color: var(--lime); color: var(--lime); }
+
+/* Sidebar içi kapatma butonu — masaüstünde gizli */
+.sidebar-close {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-3);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 2px;
+  line-height: 1;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
+}
+.sidebar-close:hover { color: var(--coral); background: rgba(255,98,64,0.1); }
+
+/* Sidebar başlık satırı (başlık + kapat butonu yan yana) */
+.sidebar-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Karartma katmanı */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  top: var(--header-height);
+  background: rgba(0,0,0,0.62);
+  z-index: 150;
+  cursor: pointer;
+}
+.sidebar-overlay.visible { display: block; }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBİL — Öğrenme sayfası (≤768px)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Hamburger + kapat butonu görünür */
+  .sidebar-toggle { display: flex; }
+  .sidebar-close  { display: block; }
+
+  /* Nav'daki breadcrumb gizle (sidebar drawer'da zaten var) */
+  #top-breadcrumb { display: none; }
+
+  /* İlerleme küçük kalsın, taşmasın */
+  #nav-progress { font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+
+  /* Sidebar → sabit konumlu çekmece */
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: var(--header-height);
+    height: calc(100vh - var(--header-height));
+    z-index: 200;
+    width: 82vw;
+    max-width: 300px;
+    min-width: unset;
+    transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+  }
+  .sidebar.open {
+    left: 0;
+    box-shadow: 6px 0 40px rgba(0,0,0,0.55);
+  }
+
+  /* İçerik tam genişlik (sidebar fixed olduğu için otomatik) */
+  .content-main    { padding: 22px 18px; }
+  .content-topbar  { padding: 10px 14px; }
+
+  /* Breadcrumb içerik alanında: sadece mevcut sayfa adı */
+  .content-topbar .breadcrumb a,
+  .content-topbar .breadcrumb .sep { display: none; }
+  .content-topbar .breadcrumb .current {
+    font-size: 12px;
+    color: var(--text-2);
+  }
+
+  /* Wiki başlık */
+  .wiki-header       { margin-bottom: 18px; }
+  .wiki-header h1    { font-size: 1.5rem; letter-spacing: -0.6px; }
+
+  /* Editör */
+  #wiki-content      { min-height: 260px; font-size: 14px; padding: 14px 15px; }
+  .wiki-preview      { min-height: 260px; padding: 16px; }
+  .editor-actions    { flex-wrap: wrap; gap: 8px; }
+
+  /* Domain / Konu başlıkları */
+  .topic-overview h1,
+  .domain-overview h1 { font-size: 1.6rem; letter-spacing: -0.6px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MOBİL — Küçük telefon (≤480px)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  /* ─── Landing ─── */
+  .hero         { padding: 44px 16px 22px; }
+  .stats-bar    { padding: 0 16px; gap: 10px 22px; margin-bottom: 44px; }
+  .stat:not(:last-child)::after { right: -11px; }
+  .stat .num    { font-size: 1.9rem; }
+  .certs-section { padding: 0 16px 44px; }
+  .extra-section { padding: 0 16px 36px; }
+  .hand-footer   { padding: 0 16px 40px; font-size: 1.15rem; transform: none; }
+
+  /* Kart açıları kaldır — küçük ekranda taşıyor */
+  .cert-card:nth-child(1),
+  .cert-card:nth-child(2),
+  .cert-card:nth-child(3),
+  .cert-card:nth-child(4) { transform: none !important; }
+  .cert-card:hover         { transform: translateY(-3px) !important; }
+
+  /* ─── Learn sayfası ─── */
+  .content-main  { padding: 16px 12px; }
+
+  /* Toolbar butonları biraz küçült */
+  .toolbar-btn   { padding: 5px 7px; font-size: 11px; }
+  .toolbar-sep   { display: none; }
+}
