@@ -55,7 +55,12 @@
 <div class="toast" id="toast"></div>
 
 <script src="/js/data.js"></script>
-<script>
+<script type="module">
+import {
+  preloadCert, loadWiki as cloudLoadWiki, saveWiki as cloudSaveWiki,
+  getLastSavedTs, getProgress, markDoneCloud, markUndoneCloud
+} from '/js/cloud.js';
+
 // ─── DURUM ────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
 const certId = params.get('cert');
@@ -63,29 +68,21 @@ const certId = params.get('cert');
 const cert = CERTIFICATIONS.find(c => c.id === certId);
 if (!cert) { location.href = '/'; }
 
-let progress = loadProgress();
+let progress = {};
 
 // ─── YARDIMCILAR ──────────────────────────────────────────
-function loadProgress() {
-  try { return JSON.parse(localStorage.getItem(`progress_${certId}`) || '{}'); }
-  catch { return {}; }
-}
-function saveProgress() {
-  localStorage.setItem(`progress_${certId}`, JSON.stringify(progress));
-}
 function loadWiki(id) {
-  return localStorage.getItem(`wiki_${certId}_${id}`) || '';
+  return cloudLoadWiki(certId, id);
 }
 function saveWiki(id, content) {
-  localStorage.setItem(`wiki_${certId}_${id}`, content);
+  return cloudSaveWiki(certId, id, content);
 }
 function getLastSaved(id) {
-  const ts = localStorage.getItem(`wiki_ts_${certId}_${id}`);
-  return ts ? new Date(parseInt(ts)).toLocaleString('tr-TR') : null;
+  const ts = getLastSavedTs(certId, id);
+  return ts ? new Date(ts).toLocaleString('tr-TR') : null;
 }
 function saveWikiWithTimestamp(id, content) {
-  saveWiki(id, content);
-  localStorage.setItem(`wiki_ts_${certId}_${id}`, Date.now());
+  return saveWiki(id, content); // sunucu zaten updatedAt yazıyor
 }
 
 function totalSubtopics() {
@@ -111,13 +108,13 @@ function findSub(domainId, topicId, subId) {
 
 function markDone(id) {
   progress[id] = true;
-  saveProgress();
+  markDoneCloud(certId, id);
   updateProgressDisplay();
   updateSidebarItems();
 }
 function markUndone(id) {
   delete progress[id];
-  saveProgress();
+  markUndoneCloud(certId, id);
   updateProgressDisplay();
   updateSidebarItems();
 }
@@ -491,38 +488,6 @@ kod bloğu
   };
 }
 
-window.saveContent = (id) => {
-  const ta = document.getElementById('wiki-content');
-  saveWikiWithTimestamp(id, ta.value);
-  document.getElementById('last-saved-info').innerHTML = `
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-    son kayıt: ${new Date().toLocaleString('tr-TR')}
-  `;
-  showSaveIndicator('saved', 'kaydedildi');
-  showToast('İçerik kaydedildi ✓', 'success');
-};
-
-window.clearContent = (id) => {
-  if (!confirm('Bu sayfanın içeriği silinsin mi?')) return;
-  document.getElementById('wiki-content').value = '';
-  saveWikiWithTimestamp(id, '');
-  showToast('İçerik temizlendi', 'info');
-};
-
-window.toggleDone = (id, btn) => {
-  if (progress[id]) {
-    markUndone(id);
-    btn.className = 'btn btn-success';
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Tamamlandı`;
-    showToast('Tamamlanmadı olarak işaretlendi', 'info');
-  } else {
-    markDone(id);
-    btn.className = 'btn btn-danger';
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/></svg> Tamamlanmadı`;
-    showToast('Tamamlandı olarak işaretlendi! 🎉', 'success');
-  }
-};
-
 function showSaveIndicator(type, msg) {
   const ind = document.getElementById('save-indicator');
   if (!ind) return;
@@ -590,9 +555,66 @@ document.getElementById('top-breadcrumb').innerHTML = `
   <span class="current">${cert.title} — ${cert.subtitle}</span>
 `;
 
-buildSidebar();
-showCertOverview();
-updateProgressDisplay();
+// Modül scope — HTML onclick'lerden erişilebilmesi için window'a aç
+window.showCertOverview = showCertOverview;
+window.showDomain = showDomain;
+window.showTopic = showTopic;
+window.showSubtopic = showSubtopic;
+window.findDomain = findDomain;
+window.findTopic = findTopic;
+window.findSub = findSub;
+window.toggleDone = (id, btn) => {
+  if (progress[id]) {
+    markUndone(id);
+    btn.className = 'btn btn-success';
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Tamamlandı`;
+    showToast('Tamamlanmadı olarak işaretlendi', 'info');
+  } else {
+    markDone(id);
+    btn.className = 'btn btn-danger';
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/></svg> Tamamlanmadı`;
+    showToast('Tamamlandı olarak işaretlendi! 🎉', 'success');
+  }
+};
+window.saveContent = (id) => {
+  const ta = document.getElementById('wiki-content');
+  showSaveIndicator('saving', 'kaydediliyor...');
+  saveWikiWithTimestamp(id, ta.value).then(ok => {
+    if (ok !== false) {
+      document.getElementById('last-saved-info').innerHTML = `
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        son kayıt: ${new Date().toLocaleString('tr-TR')}
+      `;
+      showSaveIndicator('saved', 'buluta kaydedildi');
+      showToast('Buluta kaydedildi ☁️✓', 'success');
+    } else {
+      showToast('Kaydedilemedi — bağlantıyı kontrol et', 'error');
+    }
+  });
+};
+window.clearContent = (id) => {
+  if (!confirm('Bu sayfanın içeriği silinsin mi?')) return;
+  document.getElementById('wiki-content').value = '';
+  saveWikiWithTimestamp(id, '');
+  showToast('İçerik temizlendi', 'info');
+};
+
+// Loading göstergesi
+document.getElementById('content-main').innerHTML = `
+  <div class="empty-state">
+    <div class="big-icon">☁️</div>
+    <h3>Buluttan yükleniyor…</h3>
+    <p>notlar ve ilerleme çekiliyor</p>
+  </div>
+`;
+
+(async () => {
+  await preloadCert(certId);
+  progress = getProgress(certId);
+  buildSidebar();
+  showCertOverview();
+  updateProgressDisplay();
+})();
 </script>
 </body>
 </html>
