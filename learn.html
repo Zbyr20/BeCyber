@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BeCyber — Öğren</title>
+  <meta name="theme-color" content="#14130f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://firestore.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -626,21 +629,20 @@ document.getElementById('sidebar-toggle').addEventListener('click', openSidebar)
 document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
 document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
 
-// Loading göstergesi
-document.getElementById('content-main').innerHTML = `
-  <div class="empty-state">
-    <div class="big-icon">☁️</div>
-    <h3>Buluttan yükleniyor…</h3>
-    <p>notlar ve ilerleme çekiliyor</p>
-  </div>
-`;
+// ─── ANINDA RENDER: localStorage'dan ilerlemeyi al ─────────
+// Firebase beklenmez — müfredat hemen görünür
+try { progress = JSON.parse(localStorage.getItem(`progress_${certId}`) || '{}'); }
+catch { progress = {}; }
+buildSidebar();
+showCertOverview();
+updateProgressDisplay();
 
+// ─── ARKA PLAN: Firebase'den sync et (max 4 sn) ─────────────
 (async () => {
   await preloadCert(certId);
-  progress = getProgress(certId);
-  buildSidebar();
-  showCertOverview();
+  progress = getProgress(certId);  // Firebase'den gelen (veya localStorage fallback)
   updateProgressDisplay();
+  updateSidebarItems();
 })();
 </script>
 </body>
