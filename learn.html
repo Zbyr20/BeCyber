@@ -70,17 +70,39 @@
 
 <script src="/js/data.js"></script>
 <script type="module">
-import {
-  preloadCert, loadWiki as cloudLoadWiki, saveWiki as cloudSaveWiki,
-  getLastSavedTs, getProgress, markDoneCloud, markUndoneCloud
-} from '/js/cloud.js';
+// ─── CLOUD FALLBACKS (localStorage) ───────────────────────
+// Firebase yüklenemese de müfredat hemen görünür.
+// Arka planda Firebase bağlanırsa işlevler otomatik yükseltilir.
+
+let cloudLoadWiki   = (cId, id) => localStorage.getItem(`wiki_${cId}__${id}`) || '';
+let cloudSaveWiki   = async (cId, id, content) => {
+  localStorage.setItem(`wiki_${cId}__${id}`, content);
+  localStorage.setItem(`wiki_ts_${cId}__${id}`, Date.now().toString());
+  return true;
+};
+let getLastSavedTs  = (cId, id) => {
+  const v = localStorage.getItem(`wiki_ts_${cId}__${id}`);
+  return v ? parseInt(v) : null;
+};
+let getProgress     = (cId) => {
+  try { return JSON.parse(localStorage.getItem(`progress_${cId}`) || '{}'); }
+  catch { return {}; }
+};
+let markDoneCloud   = async (cId, id) => {
+  const p = getProgress(cId); p[id] = true;
+  localStorage.setItem(`progress_${cId}`, JSON.stringify(p));
+};
+let markUndoneCloud = async (cId, id) => {
+  const p = getProgress(cId); delete p[id];
+  localStorage.setItem(`progress_${cId}`, JSON.stringify(p));
+};
 
 // ─── DURUM ────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
 const certId = params.get('cert');
 
 const cert = CERTIFICATIONS.find(c => c.id === certId);
-if (!cert) { location.href = '/'; }
+if (!cert) { location.href = '/'; throw new Error('cert bulunamadı'); }
 
 let progress = {};
 
@@ -629,20 +651,33 @@ document.getElementById('sidebar-toggle').addEventListener('click', openSidebar)
 document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
 document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
 
-// ─── ANINDA RENDER: localStorage'dan ilerlemeyi al ─────────
-// Firebase beklenmez — müfredat hemen görünür
-try { progress = JSON.parse(localStorage.getItem(`progress_${certId}`) || '{}'); }
-catch { progress = {}; }
+// ─── ANINDA RENDER ────────────────────────────────────────
+// Firebase beklenmeden müfredat + localStorage ile hemen göster
+progress = getProgress(certId);
 buildSidebar();
 showCertOverview();
 updateProgressDisplay();
 
-// ─── ARKA PLAN: Firebase'den sync et (max 4 sn) ─────────────
+// ─── ARKA PLAN: Firebase'e yükselt ────────────────────────
 (async () => {
-  await preloadCert(certId);
-  progress = getProgress(certId);  // Firebase'den gelen (veya localStorage fallback)
-  updateProgressDisplay();
-  updateSidebarItems();
+  try {
+    const cloud = await import('/js/cloud.js');
+    // İşlevleri Firebase sürümüne yükselt
+    cloudLoadWiki   = cloud.loadWiki;
+    cloudSaveWiki   = cloud.saveWiki;
+    getLastSavedTs  = cloud.getLastSavedTs;
+    getProgress     = cloud.getProgress;
+    markDoneCloud   = cloud.markDoneCloud;
+    markUndoneCloud = cloud.markUndoneCloud;
+    // Firebase'den ilerlemeyi çek, UI'ı güncelle
+    await cloud.preloadCert(certId);
+    progress = cloud.getProgress(certId);
+    updateProgressDisplay();
+    updateSidebarItems();
+  } catch (e) {
+    // Firebase kullanılamıyor — yerel mod ile devam
+    console.info('BeCyber: Firebase bağlanamadı, yerel mod aktif.', e.message);
+  }
 })();
 </script>
 </body>
