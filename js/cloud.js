@@ -10,11 +10,11 @@
 // Her Firebase çağrısı max 4 saniye bekler, sonra çıkar.
 // ───────────────────────────────────────────────────────────
 
-import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { initializeApp }  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import {
   getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteField,
   query, where, updateDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
