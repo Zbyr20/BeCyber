@@ -5,6 +5,6 @@ export const firebaseConfig = {
   projectId:         "becyber-df37a",
   storageBucket:     "becyber-df37a.firebasestorage.app",
   messagingSenderId: "590837675054",
-  appId:             "1:590837675054:web:e537ac39ddb952b28a9bbf",
-  measurementId:     "G-07TVG1JM9K"
+  appId:             "1:590837675054:web:e0b1a3b1bdb3361c8a9bbf",
+  measurementId:     "G-D0K2ZX4C7H"
 };
